@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Narada — Jagdishwaram Foundation Transparency Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #0a0a08;
+  --ink2:     #2c2c28;
+  --ink3:     #6a6a60;
+  --saffron:  #e07b00;
+  --saffron2: #f59e0b;
+  --navy:     #0f2044;
+  --paper:    #faf9f5;
+  --card:     #ffffff;
+  --border:   #e5e3db;
+  --red:      #c0392b;
+  --green:    #1a7a3f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER ── */
+.masthead{
+  background:var(--navy);
+  border-bottom:3px solid var(--saffron);
+  padding:28px 40px 24px;
+}
+.masthead-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  flex-wrap:wrap;gap:16px;
+}
+.brand{display:flex;flex-direction:column;gap:4px}
+.brand-top{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--saffron2);opacity:.8;
+}
+.brand-name{
+  font-family:'Playfair Display',serif;
+  font-size:32px;font-weight:900;color:#fff;
+  letter-spacing:-.5px;line-height:1;
+}
+.brand-name span{color:var(--saffron2);}
+.brand-sub{
+  font-size:11px;color:#94a3b8;letter-spacing:.05em;margin-top:4px;
+}
+.masthead-right{text-align:right}
+.foundation-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--saffron2);border:1px solid var(--saffron);
+  padding:4px 10px;border-radius:3px;display:inline-block;
+  margin-bottom:6px;
+}
+.foundation-email{
+  font-size:12px;color:#94a3b8;display:block;
+}
+
+/* ── MISSION STRIP ── */
+.mission-strip{
+  background:var(--saffron);
+  padding:14px 40px;
+}
+.mission-strip p{
+  max-width:1200px;margin:0 auto;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;letter-spacing:.05em;color:var(--navy);font-weight:500;
+  display:flex;align-items:center;gap:12px;
+}
+.mission-strip p::before{
+  content:'◆';font-size:8px;
+}
+
+/* ── MAIN ── */
+main{max-width:1200px;margin:0 auto;padding:48px 40px 80px;}
+
+.section-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--saffron);margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::before{content:'';display:block;width:24px;height:1px;background:var(--saffron);}
+
+h1.page-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,48px);font-weight:700;
+  line-height:1.1;color:var(--navy);
+  margin-bottom:16px;max-width:720px;
+}
+.page-intro{
+  font-size:16px;color:var(--ink2);line-height:1.7;
+  max-width:640px;margin-bottom:48px;
+}
+
+/* ── DASHBOARD GRID ── */
+.dashboards{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:24px;margin-bottom:64px;
+}
+.dash-card{
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+  transition:box-shadow .2s,border-color .2s;
+  display:block;text-decoration:none;color:inherit;
+}
+.dash-card:hover{
+  box-shadow:0 8px 32px rgba(15,32,68,.12);
+  border-color:var(--saffron);
+}
+.dash-card-header{
+  background:var(--navy);
+  padding:20px 24px 16px;
+  border-bottom:2px solid var(--saffron);
+}
+.dash-card-header .authority{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--saffron2);margin-bottom:8px;
+}
+.dash-card-header h2{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:700;color:#fff;line-height:1.2;
+}
+.dash-card-body{padding:20px 24px;}
+.dash-card-body p{
+  font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:16px;
+}
+.dash-meta{
+  display:flex;flex-direction:column;gap:8px;margin-bottom:20px;
+}
+.meta-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;
+}
+.meta-label{color:var(--ink3);font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;}
+.meta-value{font-weight:500;color:var(--ink2);}
+.status-pill{
+  display:inline-block;padding:3px 10px;border-radius:2px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.status-active{background:#fef3c7;color:#92400e;}
+.status-pending{background:#fde8e8;color:var(--red);}
+.status-future{background:#f1f5f9;color:#475569;}
+.dash-cta{
+  display:flex;align-items:center;gap:8px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--saffron);text-transform:uppercase;letter-spacing:.08em;
+}
+.dash-cta::after{content:'→';transition:transform .2s;}
+.dash-card:hover .dash-cta::after{transform:translateX(4px);}
+
+/* ── PLACEHOLDER CARD ── */
+.dash-card.coming-soon{opacity:.6;pointer-events:none;}
+.dash-card.coming-soon .dash-card-header{background:#374151;}
+
+/* ── HOW IT WORKS ── */
+.how-it-works{
+  border-top:1px solid var(--border);padding-top:48px;
+}
+.steps{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:32px;margin-top:32px;
+}
+.step{position:relative;padding-left:32px;}
+.step-num{
+  position:absolute;left:0;top:0;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+  color:var(--saffron);font-weight:500;
+}
+.step h3{
+  font-family:'Playfair Display',serif;
+  font-size:16px;font-weight:700;color:var(--navy);
+  margin-bottom:8px;
+}
+.step p{font-size:13px;color:var(--ink2);line-height:1.6;}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--navy);border-top:3px solid var(--saffron);
+  padding:32px 40px;
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+}
+footer p{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;color:#64748b;letter-spacing:.04em;
+  line-height:1.8;
+}
+footer p strong{color:#94a3b8;}
+.satyamev{
+  font-family:'Playfair Display',serif;
+  font-size:14px;color:var(--saffron2);font-style:italic;
+}
+
+@media(max-width:640px){
+  .masthead,main,footer{padding-left:20px;padding-right:20px;}
+  .mission-strip{padding-left:20px;padding-right:20px;}
+  .masthead-inner{flex-direction:column;align-items:flex-start;}
+  .masthead-right{text-align:left;}
+  h1.page-title{font-size:28px;}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <span class="brand-top">Jagdishwaram Foundation</span>
+      <div class="brand-name">NARADA <span>◆</span></div>
+      <div class="brand-sub">Public Accountability &amp; Transparency Portal</div>
+    </div>
+    <div class="masthead-right">
+      <span class="foundation-badge">Jagdishwaram Foundation</span>
+      <span class="foundation-email">ashish.j.naik@jagdishwaram-office.org</span>
+    </div>
+  </div>
+</header>
+
+<div class="mission-strip">
+  <p>Institutional delays measured, mapped, and made impossible to ignore — one RTI at a time.</p>
+</div>
+
+<main>
+  <div class="section-label">Active Dashboards</div>
+  <h1 class="page-title">Where Government Action Stands, Tracked in Public</h1>
+  <p class="page-intro">Each dashboard below corresponds to one RTI filed with a government authority. Data populates as responses arrive. Empty rows are not absence — they are accountability waiting to be filled.</p>
+
+  <div class="dashboards">
+
+    <!-- ACTIVE: Palghar MCA -->
+    <a href="palghar-mca/index.html" class="dash-card">
+      <div class="dash-card-header">
+        <div class="authority">District Collector, Palghar — RTI/2026/001</div>
+        <h2>Palghar District<br>Easement Case Pendency</h2>
+      </div>
+      <div class="dash-card-body">
+        <p>Taluka-wise ageing report of pending and disposed easement cases under Mamlatdar Courts Act — Section 5 (Mamlatdar level) and Section 23 (SDO level) — across all 8 talukas of Palghar district.</p>
+        <div class="dash-meta">
+          <div class="meta-row">
+            <span class="meta-label">RTI Filed</span>
+            <span class="meta-value">Pending</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Authority</span>
+            <span class="meta-value">District Collector, Palghar</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Status</span>
+            <span class="status-pill status-active">RTI Being Filed</span>
+          </div>
+        </div>
+        <div class="dash-cta">View Dashboard</div>
+      </div>
+    </a>
+
+    <!-- COMING SOON: JMFC Vasai -->
+    <div class="dash-card coming-soon">
+      <div class="dash-card-header">
+        <div class="authority">4th JMFC, Vasai — Upcoming</div>
+        <h2>Vasai JMFC<br>Execution Pendency</h2>
+      </div>
+      <div class="dash-card-body">
+        <p>Pendency and disposal data for execution applications before the 4th Judicial Magistrate First Class, Vasai.</p>
+        <div class="dash-meta">
+          <div class="meta-row">
+            <span class="meta-label">Status</span>
+            <span class="status-pill status-future">Planned</span>
+          </div>
+        </div>
+        <div class="dash-cta">Coming Soon</div>
+      </div>
+    </div>
+
+    <!-- COMING SOON: VVMC -->
+    <div class="dash-card coming-soon">
+      <div class="dash-card-header">
+        <div class="authority">VVMC — Upcoming</div>
+        <h2>VVMC Property Tax<br>Dispute Tracker</h2>
+      </div>
+      <div class="dash-card-body">
+        <p>RTI-sourced data on property tax demand disputes, appeals, and resolution rates at Vasai-Virar Municipal Corporation.</p>
+        <div class="dash-meta">
+          <div class="meta-row">
+            <span class="meta-label">Status</span>
+            <span class="status-pill status-future">Planned</span>
+          </div>
+        </div>
+        <div class="dash-cta">Coming Soon</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-it-works">
+    <div class="section-label">Methodology</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:var(--navy);margin-bottom:8px;">How This Portal Works</h2>
+    <p style="font-size:14px;color:var(--ink2);max-width:560px;margin-bottom:0;">Every data point on this portal originates from a formal RTI application filed under the Right to Information Act, 2005.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h3>RTI Filed</h3>
+        <p>A formal RTI application is submitted to the relevant Public Information Officer. Filing date and reference number are recorded immediately.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h3>30-Day Clock</h3>
+        <p>The statutory response deadline (30 days under RTI Act) is tracked publicly. Non-response itself becomes data.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h3>Data Published</h3>
+        <p>On receipt of response, data is extracted, verified, and published on the dashboard. Partial responses are noted.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <h3>Pattern Emerges</h3>
+        <p>Across RTI cycles, systemic delays become visible as patterns — not isolated incidents, but institutional behaviour.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>
+      <strong>Jagdishwaram Foundation</strong><br>
+      Data sourced via RTI under Sections 4 &amp; 6, Right to Information Act, 2005<br>
+      Built for public accountability · narada.jagdishwaram-office.org
+    </p>
+    <div class="satyamev">सत्यमेव जयते</div>
+  </div>
+</footer>
+
+</body>
+</html>
