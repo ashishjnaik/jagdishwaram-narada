@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "dashboard_title": "Palghar District Easement Case Pendency",
+    "authority": "District Collector, Palghar",
+    "rti_reference": "RTI/DC-PGH/2026/001",
+    "rti_filed_date": null,
+    "rti_response_due": null,
+    "rti_response_received": null,
+    "data_as_of": null,
+    "status": "RTI_BEING_FILED",
+    "filed_by": "Jagdishwaram Foundation",
+    "contact": "ashish.j.naik@jagdishwaram-office.org",
+    "legal_basis": "Right to Information Act 2005, Section 6",
+    "information_sought": "Taluka-wise pendency and disposal data for cases under Mamlatdar Courts Act 1906 — Section 5 (Mamlatdar/Taluka level) and Section 23 (SDO level) — across all 8 talukas of Palghar District for the period 2020-2026",
+    "notes": "Dashboard live. RTI filing in progress. Data rows will populate on receipt of response."
+  },
+  "talukas": [
+    { "code": "PGH", "name": "Palghar",    "lat": 19.697, "lng": 72.771, "sec5": null, "sec23": null },
+    { "code": "VSI", "name": "Vasai",      "lat": 19.391, "lng": 72.832, "sec5": null, "sec23": null },
+    { "code": "DHN", "name": "Dahanu",     "lat": 19.967, "lng": 72.733, "sec5": null, "sec23": null },
+    { "code": "TLS", "name": "Talasari",   "lat": 20.000, "lng": 72.950, "sec5": null, "sec23": null },
+    { "code": "WDA", "name": "Wada",       "lat": 19.650, "lng": 73.150, "sec5": null, "sec23": null },
+    { "code": "VKG", "name": "Vikramgad",  "lat": 19.800, "lng": 73.000, "sec5": null, "sec23": null },
+    { "code": "JWR", "name": "Jawhar",     "lat": 19.917, "lng": 73.217, "sec5": null, "sec23": null },
+    { "code": "MKD", "name": "Mokhada",    "lat": 19.750, "lng": 73.050, "sec5": null, "sec23": null }
+  ],
+  "sec5_fields": ["total_filed", "pending", "disposed", "avg_age_days", "over_1yr_pct"],
+  "sec23_fields": ["total_filed", "pending", "disposed", "avg_age_days", "over_1yr_pct"],
+  "rti_history": []
+}

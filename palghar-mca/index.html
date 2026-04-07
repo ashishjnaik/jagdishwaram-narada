@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palghar Easement Case Pendency — Narada | Jagdishwaram Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --ink:       #0a0a08;
+  --ink2:      #2c2c28;
+  --ink3:      #6a6a60;
+  --saffron:   #e07b00;
+  --saffron2:  #f59e0b;
+  --navy:      #0f2044;
+  --paper:     #faf9f5;
+  --card:      #ffffff;
+  --border:    #e5e3db;
+  --red:       #c0392b;
+  --red-bg:    #fde8e8;
+  --green:     #1a7a3f;
+  --green-bg:  #dcfce7;
+  --amber:     #92400e;
+  --amber-bg:  #fef3c7;
+  --pending-bg:#f1f5f9;
+  --pending-fg:#475569;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  background:var(--paper);color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER ── */
+.masthead{
+  background:var(--navy);
+  border-bottom:3px solid var(--saffron);
+  padding:20px 40px;
+}
+.masthead-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+.brand-link{text-decoration:none;display:flex;flex-direction:column;gap:2px;}
+.brand-top{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--saffron2);opacity:.8;
+}
+.brand-name{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:900;
+  color:#fff;letter-spacing:-.3px;
+}
+.brand-name span{color:var(--saffron2);}
+.header-center h1{
+  font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+  color:#fff;text-align:center;line-height:1.3;
+}
+.header-center p{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  color:var(--saffron2);text-transform:uppercase;letter-spacing:.12em;
+  text-align:center;margin-top:3px;
+}
+.header-right{text-align:right;}
+.rti-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:#94a3b8;display:block;
+}
+.rti-ref{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--saffron2);display:block;margin-top:2px;
+}
+
+/* ── STATUS BANNER ── */
+.status-banner{
+  padding:12px 40px;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+}
+.status-banner.filing{background:#fef3c7;color:#92400e;border-bottom:1px solid #fde68a;}
+.status-banner.pending{background:#fde8e8;color:var(--red);border-bottom:1px solid #fca5a5;}
+.status-banner.received{background:#dcfce7;color:#166534;border-bottom:1px solid #86efac;}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;animation:pulse 2s infinite;}
+.filing .status-dot{background:#d97706;}
+.pending .status-dot{background:var(--red);}
+.received .status-dot{background:#16a34a;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── MAIN LAYOUT ── */
+.layout{
+  max-width:1400px;margin:0 auto;
+  display:grid;grid-template-columns:260px 1fr;
+  gap:0;min-height:calc(100vh - 160px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:var(--card);border-right:1px solid var(--border);
+  padding:28px 24px;
+  position:sticky;top:0;height:calc(100vh - 100px);
+  overflow-y:auto;
+}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--saffron);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.sidebar-label::before{content:'';display:block;width:16px;height:1px;background:var(--saffron);}
+.filter-select{
+  width:100%;border:1.5px solid var(--border);border-radius:3px;
+  padding:9px 10px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  color:var(--ink);background:var(--paper);outline:none;cursor:pointer;
+  transition:border-color .15s;
+}
+.filter-select:focus{border-color:var(--saffron);}
+.filter-checkboxes{display:flex;flex-direction:column;gap:8px;}
+.filter-check{
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  font-size:13px;color:var(--ink2);
+}
+.filter-check input{accent-color:var(--saffron);cursor:pointer;}
+.sidebar-info{
+  background:#f8f7f2;border:1px solid var(--border);border-radius:3px;
+  padding:14px;font-size:11px;color:var(--ink3);line-height:1.7;
+}
+.sidebar-info strong{color:var(--ink2);}
+.sidebar-info a{color:var(--saffron);text-decoration:none;}
+
+/* ── CONTENT ── */
+.content{padding:28px 32px;}
+
+/* ── RTI TIMELINE ── */
+.rti-timeline{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:4px;padding:20px 24px;margin-bottom:28px;
+}
+.rti-timeline h2{
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+  color:var(--navy);margin-bottom:16px;
+}
+.timeline-steps{display:flex;gap:0;position:relative;}
+.timeline-steps::before{
+  content:'';position:absolute;top:14px;left:14px;right:14px;height:1px;
+  background:var(--border);z-index:0;
+}
+.t-step{flex:1;text-align:center;position:relative;z-index:1;}
+.t-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 8px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
+}
+.t-dot.done{background:var(--saffron);color:#fff;}
+.t-dot.active{background:var(--navy);color:var(--saffron2);border:2px solid var(--saffron);}
+.t-dot.wait{background:#f1f5f9;color:#94a3b8;border:2px solid var(--border);}
+.t-label{font-size:10px;color:var(--ink2);line-height:1.4;}
+.t-date{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  color:var(--ink3);margin-top:3px;
+}
+
+/* ── KPI CARDS ── */
+.kpis{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:16px;margin-bottom:28px;
+}
+.kpi{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:4px;padding:18px 20px;
+}
+.kpi-label{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);
+  margin-bottom:8px;
+}
+.kpi-value{
+  font-family:'Playfair Display',serif;font-size:32px;font-weight:700;
+  line-height:1;margin-bottom:4px;
+}
+.kpi-sub{font-size:11px;color:var(--ink3);}
+.kpi.red .kpi-value{color:var(--red);}
+.kpi.amber .kpi-value{color:var(--amber);}
+.kpi.green .kpi-value{color:var(--green);}
+.kpi.navy .kpi-value{color:var(--navy);}
+.kpi-pending .kpi-value{
+  font-size:14px;font-family:'IBM Plex Mono',monospace;
+  color:var(--ink3);font-weight:500;
+}
+
+/* ── MAP ── */
+.map-section{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:4px;padding:20px 24px;margin-bottom:28px;
+}
+.map-section h2{
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+  color:var(--navy);margin-bottom:6px;
+}
+.map-subtitle{font-size:12px;color:var(--ink3);margin-bottom:14px;}
+#map{height:440px;border-radius:3px;border:1px solid var(--border);}
+.map-legend{
+  display:flex;gap:20px;margin-top:12px;flex-wrap:wrap;
+}
+.legend-item{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--ink2);
+}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
+
+/* ── TABLE ── */
+.table-section{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:4px;padding:20px 24px;
+}
+.table-section h2{
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+  color:var(--navy);margin-bottom:4px;
+}
+.table-subtitle{font-size:12px;color:var(--ink3);margin-bottom:16px;}
+.data-table{width:100%;border-collapse:collapse;font-size:13px;}
+.data-table th{
+  background:#f8f7f2;border-bottom:2px solid var(--border);
+  padding:10px 12px;text-align:left;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--saffron);
+  white-space:nowrap;
+}
+.data-table th:not(:first-child){text-align:right;}
+.data-table td{
+  padding:11px 12px;border-bottom:1px solid #f0ede5;
+  color:var(--ink2);vertical-align:middle;
+}
+.data-table td:not(:first-child){text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:#faf9f5;}
+.taluka-name{font-weight:500;color:var(--ink);}
+.pending-cell{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:var(--ink3);font-style:italic;
+}
+.age-high{color:var(--red);font-weight:500;}
+.age-mid{color:var(--amber);font-weight:500;}
+.age-low{color:var(--green);font-weight:500;}
+.pct-high{color:var(--red);}
+.no-data{
+  text-align:center;padding:40px;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink3);
+}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--navy);border-top:3px solid var(--saffron);
+  padding:24px 40px;margin-top:0;
+}
+.footer-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+footer p{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:#64748b;letter-spacing:.03em;line-height:1.8;
+}
+footer p strong{color:#94a3b8;}
+.satyamev{
+  font-family:'Playfair Display',serif;font-size:14px;
+  color:var(--saffron2);font-style:italic;
+}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border);}
+  .masthead,.status-banner,.content,footer{padding-left:20px;padding-right:20px;}
+  .kpis{grid-template-columns:repeat(2,1fr);}
+  .timeline-steps{flex-direction:column;gap:16px;}
+  .timeline-steps::before{display:none;}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="../index.html" class="brand-link">
+      <span class="brand-top">← Narada Portal</span>
+      <div class="brand-name">NARADA <span>◆</span></div>
+    </a>
+    <div class="header-center">
+      <h1>Palghar District Easement Case Pendency</h1>
+      <p>Mamlatdar Courts Act · Section 5 &amp; Section 23 · All 8 Talukas</p>
+    </div>
+    <div class="header-right">
+      <span class="rti-badge">Filed by Jagdishwaram Foundation</span>
+      <span class="rti-ref" id="rti-ref-display">RTI/DC-PGH/2026/001</span>
+    </div>
+  </div>
+</header>
+
+<div class="status-banner filing" id="status-banner">
+  <span class="status-dot"></span>
+  <span id="banner-text">RTI filing in progress — dashboard live with placeholder data</span>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Filter by Taluka</div>
+      <select class="filter-select" id="talukaFilter" onchange="applyFilters()">
+        <option value="ALL">All Talukas</option>
+        <option value="PGH">Palghar</option>
+        <option value="VSI">Vasai</option>
+        <option value="DHN">Dahanu</option>
+        <option value="TLS">Talasari</option>
+        <option value="WDA">Wada</option>
+        <option value="VKG">Vikramgad</option>
+        <option value="JWR">Jawhar</option>
+        <option value="MKD">Mokhada</option>
+      </select>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Court Level</div>
+      <div class="filter-checkboxes">
+        <label class="filter-check">
+          <input type="checkbox" id="chkSec5" checked onchange="applyFilters()">
+          Mamlatdar — Section 5
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" id="chkSec23" checked onchange="applyFilters()">
+          SDO — Section 23
+        </label>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-info">
+        <strong>Data Source</strong><br>
+        RTI filed with Office of the District Collector, Palghar under Section 6, Right to Information Act 2005.<br><br>
+        <strong>Update Frequency</strong><br>
+        Dashboard updates on receipt of each RTI response.<br><br>
+        <strong>Filed by</strong><br>
+        Jagdishwaram Foundation<br>
+        <a href="mailto:ashish.j.naik@jagdishwaram-office.org">ashish.j.naik@jagdishwaram-office.org</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+
+    <!-- RTI TIMELINE -->
+    <div class="rti-timeline">
+      <h2>RTI Filing Timeline</h2>
+      <div class="timeline-steps">
+        <div class="t-step">
+          <div class="t-dot active" id="td-1">1</div>
+          <div class="t-label">RTI Drafted</div>
+          <div class="t-date" id="td-1-date">In Progress</div>
+        </div>
+        <div class="t-step">
+          <div class="t-dot wait" id="td-2">2</div>
+          <div class="t-label">RTI Filed</div>
+          <div class="t-date" id="td-2-date">—</div>
+        </div>
+        <div class="t-step">
+          <div class="t-dot wait" id="td-3">3</div>
+          <div class="t-label">Response Due</div>
+          <div class="t-date" id="td-3-date">—</div>
+        </div>
+        <div class="t-step">
+          <div class="t-dot wait" id="td-4">4</div>
+          <div class="t-label">Response Received</div>
+          <div class="t-date" id="td-4-date">Awaited</div>
+        </div>
+        <div class="t-step">
+          <div class="t-dot wait" id="td-5">5</div>
+          <div class="t-label">Data Published</div>
+          <div class="t-date" id="td-5-date">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis" id="kpi-grid">
+      <div class="kpi navy">
+        <div class="kpi-label">Total Cases Filed</div>
+        <div class="kpi-value kpi-pending">—</div>
+        <div class="kpi-sub">Awaiting RTI response</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Total Pending</div>
+        <div class="kpi-value kpi-pending">—</div>
+        <div class="kpi-sub">Awaiting RTI response</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-label">Avg Pendency</div>
+        <div class="kpi-value kpi-pending">—</div>
+        <div class="kpi-sub">Days · Awaiting RTI response</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Cases &gt;1 Year Old</div>
+        <div class="kpi-value kpi-pending">—</div>
+        <div class="kpi-sub">Awaiting RTI response</div>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map-section">
+      <h2>Palghar District — Taluka &amp; SDO Locations</h2>
+      <p class="map-subtitle">8 talukas shown. Pin colour reflects pendency level once RTI data arrives. Currently all pins show placeholder state.</p>
+      <div id="map"></div>
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> Low Pendency (&lt;400 days avg)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Medium Pendency (400–600 days)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div> High Pendency (&gt;600 days)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div> Awaiting RTI Response</div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-section">
+      <h2>Detailed Ageing Report</h2>
+      <p class="table-subtitle">All figures sourced from RTI responses. Null values indicate response pending.</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Taluka</th>
+            <th>Court Level</th>
+            <th>Total Filed</th>
+            <th>Pending</th>
+            <th>Disposed</th>
+            <th>Avg Age (days)</th>
+            <th>% &gt;1 Year</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /layout -->
+
+<footer>
+  <div class="footer-inner">
+    <p>
+      <strong>Jagdishwaram Foundation</strong> · narada.jagdishwaram-office.org<br>
+      RTI filed under Right to Information Act 2005, Sections 4 &amp; 6 · Built for public accountability<br>
+      Data last updated: <span id="last-updated">Dashboard live — RTI response awaited</span>
+    </p>
+    <div class="satyamev">सत्यमेव जयते</div>
+  </div>
+</footer>
+
+<script>
+// ── Load data from JSON ──────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch('../data/palghar-mca/rti_001.json');
+    return await res.json();
+  } catch (e) {
+    console.warn('Data file not found, using embedded defaults');
+    return getDefaultData();
+  }
+}
+
+function getDefaultData() {
+  return {
+    meta: {
+      rti_reference: "RTI/DC-PGH/2026/001",
+      rti_filed_date: null,
+      rti_response_due: null,
+      rti_response_received: null,
+      data_as_of: null,
+      status: "RTI_BEING_FILED"
+    },
+    talukas: [
+      {code:"PGH",name:"Palghar",   lat:19.697,lng:72.771,sec5:null,sec23:null},
+      {code:"VSI",name:"Vasai",     lat:19.391,lng:72.832,sec5:null,sec23:null},
+      {code:"DHN",name:"Dahanu",    lat:19.967,lng:72.733,sec5:null,sec23:null},
+      {code:"TLS",name:"Talasari",  lat:20.000,lng:72.950,sec5:null,sec23:null},
+      {code:"WDA",name:"Wada",      lat:19.650,lng:73.150,sec5:null,sec23:null},
+      {code:"VKG",name:"Vikramgad", lat:19.800,lng:73.000,sec5:null,sec23:null},
+      {code:"JWR",name:"Jawhar",    lat:19.917,lng:73.217,sec5:null,sec23:null},
+      {code:"MKD",name:"Mokhada",   lat:19.750,lng:73.050,sec5:null,sec23:null}
+    ]
+  };
+}
+
+// ── Map ──────────────────────────────────────────────────────────
+let map, markers = [];
+
+function initMap(talukas) {
+  map = L.map('map').setView([19.70, 72.95], 9);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors © CARTO',
+    maxZoom: 14
+  }).addTo(map);
+
+  talukas.forEach(t => {
+    const hasData = t.sec5 || t.sec23;
+    const color = hasData ? getPendencyColor(t) : '#94a3b8';
+    const dot = L.divIcon({
+      className: '',
+      html: `<div style="width:16px;height:16px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>`,
+      iconSize: [16, 16], iconAnchor: [8, 8]
+    });
+    const popup = buildPopup(t);
+    const m = L.marker([t.lat, t.lng], {icon: dot})
+               .bindPopup(popup, {maxWidth: 260})
+               .addTo(map);
+    markers.push({taluka: t.code, marker: m});
+  });
+}
+
+function getPendencyColor(t) {
+  const sec = t.sec5 || t.sec23;
+  if (!sec) return '#94a3b8';
+  const avg = sec.avg_age_days;
+  if (!avg) return '#94a3b8';
+  if (avg < 400) return '#16a34a';
+  if (avg < 600) return '#d97706';
+  return '#dc2626';
+}
+
+function buildPopup(t) {
+  const pending = t.sec5 ? t.sec5.pending : null;
+  const avg = t.sec5 ? t.sec5.avg_age_days : null;
+  return `
+    <div style="font-family:'IBM Plex Sans',sans-serif;min-width:200px">
+      <div style="font-weight:600;font-size:14px;color:#0f2044;margin-bottom:8px">${t.name} Taluka</div>
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr><td style="color:#6a6a60;padding:2px 0">Section 5 Pending</td>
+            <td style="text-align:right;font-family:'IBM Plex Mono',monospace">${pending !== null ? pending : '<em style="color:#94a3b8">Awaited</em>'}</td></tr>
+        <tr><td style="color:#6a6a60;padding:2px 0">Avg Age (days)</td>
+            <td style="text-align:right;font-family:'IBM Plex Mono',monospace">${avg !== null ? avg : '<em style="color:#94a3b8">Awaited</em>'}</td></tr>
+      </table>
+      <div style="margin-top:8px;padding:6px;background:#fef3c7;border-radius:3px;font-size:10px;font-family:'IBM Plex Mono',monospace;color:#92400e;text-transform:uppercase;letter-spacing:.06em">
+        RTI Response Awaited
+      </div>
+    </div>`;
+}
+
+// ── Table ────────────────────────────────────────────────────────
+let allData = [];
+
+function buildTable(talukas) {
+  const body = document.getElementById('table-body');
+  const rows = [];
+  const showSec5  = document.getElementById('chkSec5').checked;
+  const showSec23 = document.getElementById('chkSec23').checked;
+  const talukaFilter = document.getElementById('talukaFilter').value;
+
+  talukas.forEach(t => {
+    if (talukaFilter !== 'ALL' && talukaFilter !== t.code) return;
+    if (showSec5) rows.push({taluka: t.name, level: 'Mamlatdar — Sec 5', data: t.sec5});
+    if (showSec23) rows.push({taluka: t.name, level: 'SDO — Sec 23', data: t.sec23});
+  });
+
+  if (rows.length === 0) {
+    body.innerHTML = `<tr><td colspan="8" class="no-data">No data matches current filters.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = rows.map(r => {
+    if (!r.data) {
+      return `<tr>
+        <td class="taluka-name">${r.taluka}</td>
+        <td>${r.level}</td>
+        <td class="pending-cell" colspan="5">Awaiting RTI response</td>
+        <td><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:2px">PENDING</span></td>
+      </tr>`;
+    }
+    const ageClass = r.data.avg_age_days > 600 ? 'age-high' : r.data.avg_age_days > 400 ? 'age-mid' : 'age-low';
+    const pctClass = r.data.over_1yr_pct > 60 ? 'pct-high' : '';
+    return `<tr>
+      <td class="taluka-name">${r.taluka}</td>
+      <td>${r.level}</td>
+      <td>${r.data.total_filed ?? '—'}</td>
+      <td>${r.data.pending ?? '—'}</td>
+      <td>${r.data.disposed ?? '—'}</td>
+      <td class="${ageClass}">${r.data.avg_age_days ?? '—'}</td>
+      <td class="${pctClass}">${r.data.over_1yr_pct !== null ? r.data.over_1yr_pct + '%' : '—'}</td>
+      <td><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:2px">DATA LIVE</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── KPIs ─────────────────────────────────────────────────────────
+function buildKPIs(talukas, meta) {
+  const grid = document.getElementById('kpi-grid');
+  const hasData = talukas.some(t => t.sec5 || t.sec23);
+
+  if (!hasData) {
+    // Placeholder KPIs
+    grid.innerHTML = `
+      <div class="kpi navy"><div class="kpi-label">Total Cases Filed</div>
+        <div class="kpi-value kpi-pending">—</div><div class="kpi-sub">Awaiting RTI response</div></div>
+      <div class="kpi red"><div class="kpi-label">Total Pending</div>
+        <div class="kpi-value kpi-pending">—</div><div class="kpi-sub">Awaiting RTI response</div></div>
+      <div class="kpi amber"><div class="kpi-label">Avg Pendency</div>
+        <div class="kpi-value kpi-pending">—</div><div class="kpi-sub">Days · Awaiting RTI response</div></div>
+      <div class="kpi red"><div class="kpi-label">Cases &gt;1 Year Old</div>
+        <div class="kpi-value kpi-pending">—</div><div class="kpi-sub">Awaiting RTI response</div></div>`;
+    return;
+  }
+
+  let totalFiled=0, totalPending=0, ages=[], over1yr=0;
+  talukas.forEach(t => {
+    [t.sec5, t.sec23].forEach(s => {
+      if (!s) return;
+      totalFiled  += s.total_filed  || 0;
+      totalPending += s.pending     || 0;
+      if (s.avg_age_days) ages.push(s.avg_age_days);
+      if (s.pending && s.over_1yr_pct) over1yr += Math.round(s.pending * s.over_1yr_pct / 100);
+    });
+  });
+  const avgAge = ages.length ? Math.round(ages.reduce((a,b)=>a+b,0)/ages.length) : 0;
+
+  grid.innerHTML = `
+    <div class="kpi navy"><div class="kpi-label">Total Cases Filed</div>
+      <div class="kpi-value navy">${totalFiled.toLocaleString()}</div><div class="kpi-sub">Across all talukas</div></div>
+    <div class="kpi red"><div class="kpi-label">Total Pending</div>
+      <div class="kpi-value red">${totalPending.toLocaleString()}</div><div class="kpi-sub">Require action</div></div>
+    <div class="kpi amber"><div class="kpi-label">Avg Pendency</div>
+      <div class="kpi-value amber">${avgAge}</div><div class="kpi-sub">Days average</div></div>
+    <div class="kpi red"><div class="kpi-label">Cases &gt;1 Year Old</div>
+      <div class="kpi-value red">${over1yr.toLocaleString()}</div><div class="kpi-sub">Constitutional concern</div></div>`;
+}
+
+// ── Timeline ─────────────────────────────────────────────────────
+function updateTimeline(meta) {
+  const status = meta.status;
+  const steps = {
+    'RTI_BEING_FILED':    [1, meta.rti_filed_date, meta.rti_response_due, 'Awaited', '—'],
+    'RTI_FILED':          [2, meta.rti_filed_date, meta.rti_response_due, 'Awaited', '—'],
+    'RTI_OVERDUE':        [3, meta.rti_filed_date, meta.rti_response_due + ' ⚠ OVERDUE', 'Overdue', '—'],
+    'RESPONSE_RECEIVED':  [4, meta.rti_filed_date, meta.rti_response_due, meta.rti_response_received, meta.data_as_of],
+    'DATA_PUBLISHED':     [5, meta.rti_filed_date, meta.rti_response_due, meta.rti_response_received, meta.data_as_of]
+  };
+  const s = steps[status] || steps['RTI_BEING_FILED'];
+  const activeStep = s[0];
+
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById(`td-${i}`);
+    dot.className = 't-dot ' + (i < activeStep ? 'done' : i === activeStep ? 'active' : 'wait');
+  }
+
+  if (meta.rti_filed_date)        document.getElementById('td-2-date').textContent = meta.rti_filed_date;
+  if (meta.rti_response_due)      document.getElementById('td-3-date').textContent = meta.rti_response_due;
+  if (meta.rti_response_received) document.getElementById('td-4-date').textContent = meta.rti_response_received;
+  if (meta.data_as_of)            document.getElementById('td-5-date').textContent = meta.data_as_of;
+  if (meta.rti_reference)         document.getElementById('rti-ref-display').textContent = meta.rti_reference;
+  if (meta.data_as_of)            document.getElementById('last-updated').textContent = 'Data as of ' + meta.data_as_of;
+
+  // Update status banner
+  const banner = document.getElementById('status-banner');
+  const bannerText = document.getElementById('banner-text');
+  const msgs = {
+    'RTI_BEING_FILED':   ['filing',   'RTI filing in progress — dashboard live with placeholder data'],
+    'RTI_FILED':         ['pending',  `RTI filed ${meta.rti_filed_date} — response due ${meta.rti_response_due} — awaiting data`],
+    'RTI_OVERDUE':       ['pending',  `⚠ RTI response OVERDUE — filed ${meta.rti_filed_date} — deadline ${meta.rti_response_due} passed`],
+    'RESPONSE_RECEIVED': ['filing',   `RTI response received ${meta.rti_response_received} — data being processed`],
+    'DATA_PUBLISHED':    ['received', `Data current as of ${meta.data_as_of}`]
+  };
+  const [cls, msg] = msgs[status] || msgs['RTI_BEING_FILED'];
+  banner.className = `status-banner ${cls}`;
+  bannerText.textContent = msg;
+}
+
+// ── Filters ──────────────────────────────────────────────────────
+function applyFilters() {
+  buildTable(allData);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+loadData().then(d => {
+  allData = d.talukas;
+  initMap(d.talukas);
+  buildKPIs(d.talukas, d.meta);
+  buildTable(d.talukas);
+  updateTimeline(d.meta);
+});
+</script>
+</body>
+</html>
