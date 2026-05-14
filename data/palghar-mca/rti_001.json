@@ -2,17 +2,17 @@
   "meta": {
     "dashboard_title": "Palghar District Easement Case Pendency",
     "authority": "District Collector, Palghar",
-    "rti_reference": "PLCLO/R/2026/60126",
+    "rti_reference": "PLCLO/R/2026/60126 | PLCLO/A/2026/60038",
     "rti_filed_date": "08-APRIL-2026",
     "rti_response_due": "08-MAY-2026",
     "rti_response_received": null,
     "data_as_of": null,
-    "status": "RTI_FILED",
+    "status": "FIRST_APPEAL_FILED",
     "filed_by": "Jagdishwaram Foundation",
     "contact": "ashish.j.naik@jagdishwaram-office.org",
     "legal_basis": "Right to Information Act 2005, Section 6",
     "information_sought": "Taluka-wise pendency and disposal data for cases under Mamlatdar Courts Act 1906 — Section 5 (Mamlatdar/Taluka level) and Section 23 (SDO level) — across all 8 talukas of Palghar District for the period 2020-2026",
-    "notes": "Dashboard live. RTI filing in progress. Data rows will populate on receipt of response."
+    "notes": "Dashboard live.RTI Filed not responded. First Appeal Filed on 14-MAY-2026"
   },
   "talukas": [
     { "code": "PGH", "name": "Palghar",    "lat": 19.697, "lng": 72.771, "sec5": null, "sec23": null },
